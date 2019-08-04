@@ -35,21 +35,19 @@ set(VEXCL_CHECK_SIZES 0 CACHE STRING "Check that expressions have correct sizes"
 option(VEXCL_INSTALL_CL_HPP "Install the OpenCL C++ header provided by VexCL" OFF)
 
 #----------------------------------------------------------------------------
-# Find Boost
+# Add Boost
 #----------------------------------------------------------------------------
-option(Boost_USE_STATIC_LIBS "Use static versions of Boost libraries" OFF)
-if (WIN32)
-    set(Boost_USE_STATIC_LIBS ON)
-endif ()
+add_subdirectory(external/boost)
 
-find_package(Boost REQUIRED COMPONENTS
-    chrono
-    date_time
-    filesystem
-    program_options
-    system
-    thread
-    unit_test_framework
+set(BOOST_TARGETS
+    Boost_chrono
+    Boost_date_time
+    Boost_filesystem
+    Boost_program_options
+    Boost_system
+    Boost_thread
+    Boost_unit_test_framework
+    Boost_timer
     )
 
 # Ensure all targets are available
@@ -289,7 +287,7 @@ if (VEXCL_MASTER_PROJECT)
 
     install(DIRECTORY vexcl DESTINATION include)
 
-    install(TARGETS Common EXPORT VexCLTargets)
+    install(TARGETS Common ${BOOST_TARGETS} EXPORT VexCLTargets)
 
     if (TARGET VexCL::OpenCL)
         if(VEXCL_INSTALL_CL_HPP)
